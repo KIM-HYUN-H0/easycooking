@@ -1,0 +1,72 @@
+@font-face { font-family: 'KyoboHand'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/KyoboHand.woff') format('woff'); font-weight: normal; font-style: normal; }
+
+html {
+  width:100%;
+  height:100%;
+}
+body {
+  background-color: #F9F9F9;
+  margin: auto;
+  font-family: 'KyoboHand';
+  font-size:20px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  width:100%;
+  height:100%;
+}
+
+code {
+  font-family: 'KyoboHand';
+  font-size:20px;
+    
+}
+
+#headercenter {
+  width:80%;
+  margin:auto;
+
+}
+#searchtext {
+  display:inline;
+}
+
+
+#content {
+  margin-top:1em;
+
+}
+
+/*레이아웃 확인용 */
+#need_modify {
+  text-align:center;
+}
+#need_list {
+  text-align:center;
+}
+#center {
+  text-align:center;
+}
+#needcategory {
+  text-align:center;
+  display : block;
+}
+#needtitle {
+  list-style:none;
+  text-align:center;
+  
+}
+#needcheckbox {
+  margin-left:5em;
+  margin-top:1em;  
+}
+#categorySet {
+  display : block;
+  margin-top:1em;
+}
+footer {
+
+  margin-top:100%;
+}
+#detailrecipe img {
+  width:10%;
+}
