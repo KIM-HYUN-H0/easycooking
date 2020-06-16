@@ -25,10 +25,11 @@ const commentSchema = new  Schema({
 
 const contentSchema = new Schema({
     idx : {type : Number,},
+    thumbnail : {type : String },
     title : { type : String,},
     need : { type : [String]},
     sauce : { type : [String]},
-    content : { type : String },
+    content : { type : String, default : '<img src="http://placehold.it/320x100" />'},
     source : { type : String },
     author : { type : String },
     category : { type : String },

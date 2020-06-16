@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import axios from 'axios';
 import {  Link  } from 'react-router-dom';
 import styled from "styled-components";
+import { Container } from "@material-ui/core";
+import Typography from "@material-ui/core/Typography";
+import { withStyles } from "@material-ui/core/styles";
 
 class Header extends Component {
   constructor() {
@@ -17,7 +20,7 @@ class Header extends Component {
   }
   async componentDidMount() {
 
-    await axios.get('http://localhost:3001/DBapi/logincheck',
+    await axios.get('http://192.168.219.103:3001/DBapi/logincheck',
     {withCredentials : true})
     .then((data) => {
       if(data.data !== false) {
@@ -33,7 +36,7 @@ class Header extends Component {
   }
 
   async logout() {
-    await axios.get('http://localhost:3001/DBapi/logout',
+    await axios.get('http://192.168.219.103:3001/DBapi/logout',
     { withCredentials : true }
     )
     .then((res) => {
@@ -50,13 +53,21 @@ class Header extends Component {
       <div>
         {this.state.Logincheck}
       </div>
-        <div id="headercenter">
-            <Main><Home href="/"> 내 냉장고를 부탁해 </Home></Main>
-        </div>
+        <Container><Typography className={this.props.classes.main} variant="h4">내 냉장고를 부탁해</Typography></Container>
       </>
     );
   }
 }
+const styles = theme => ({
+  main: {
+    textAlign:'center',
+    textDecoration : 'none',
+    color : '#AFDB9F',
+    '&:hover' : {
+      color : '#F48060'
+    }
+  }
+});
 const HeaderTop = styled.div`
 text-align:right;
 `;
@@ -84,15 +95,5 @@ margin-right : 1em;
 color : black;
 text-decoration:none;
 `;
-const Main = styled.div`
-font-size : 4em;
-text-align:center;
-`
-const Home = styled.a`
-text-decoration:none;
-color : #AFDB9F;
-&:hover {
-  color : #F48060; 
-}
-`
-export default Header;
+
+export default withStyles(styles)(Header);

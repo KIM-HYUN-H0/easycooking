@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^4.10.2",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -13,6 +16,7 @@
     "cookie-session": "^1.4.0",
     "cors": "^2.8.5",
     "customize-cra": "^0.9.1",
+    "express-fileupload": "^1.1.7-alpha.3",
     "express-session": "^1.17.1",
     "history": "^4.10.1",
     "mobx": "^5.15.4",
@@ -26,7 +30,7 @@
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^6.0.1",
     "react": "^16.13.1",
-    "react-app-rewired": "^2.1.5",
+    "react-app-rewired": "^2.1.6",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
@@ -59,5 +63,16 @@
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/plugin-proposal-decorators": "^7.8.3",
     "core-decorators": "^0.20.0"
+  },
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "config-overrides.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KIM-HYUN-H0/easycooking.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KIM-HYUN-H0/easycooking/issues"
   }
 }

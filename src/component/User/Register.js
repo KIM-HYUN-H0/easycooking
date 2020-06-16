@@ -47,7 +47,7 @@ class Register extends Component {
 
   async Register() {
     await axios
-      .post("http://localhost:3001/DBapi/signup", {
+      .post("http://192.168.219.103:3001/DBapi/signup", {
         username: this.state.id,
         password: this.state.pw,
         password2 : this.state.pw2,

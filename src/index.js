@@ -5,16 +5,27 @@ import App from './App';
 import {Provider} from 'mobx-react';
 import * as serviceWorker from './serviceWorker';
 import categoryStore from './stores/category'
+import {
+  useTheme,
+  createMuiTheme,
+  MuiThemeProvider
+} from "@material-ui/core/styles";
 
+const theme = createMuiTheme({
+  typography: {
+    fontFamily: 'KyoboHand',
+    fontSize : '16'
+  },
+});
 
 const category = new categoryStore();
 
-
 ReactDOM.render(
-  
+  <MuiThemeProvider theme={theme}>
   <Provider category={category}>
     <App />
-  </Provider>,
+  </Provider>
+  </MuiThemeProvider>,
   document.getElementById('root')
 );
 

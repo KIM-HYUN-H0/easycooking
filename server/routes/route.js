@@ -12,7 +12,7 @@ const router = express.Router();
 const upload = multer({
   storage: multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, '../resources/image/');
+      cb(null, './server/resources/image/');
     },
     filename: function (req, file, cb) {
       cb(null, new Date().valueOf() + path.extname(file.originalname));
@@ -48,13 +48,21 @@ router.post("/categorydelete", function (req, res, next) {
     }
   });
 });
+router.get('/categorycheck', function(req,res) {
+  Category.find({number : req.query.idx}, (err,data) => {
+    res.json({data : data[0].name})
+  })
+})
 //Category js 종료
 
 //recipe.js 시작
 
 router.post("/recipewrite", function (req, res, next) {
   if (req.isAuthenticated()) {
+    const thumb = req.body.content.match(/http([^>\"']+)/g);
+    console.log(thumb[thumb.length-1]);
     const content = new Content({
+      thumbnail : thumb[thumb.length-1],
       title: req.body.title,
       need: req.body.need,
       sauce: req.body.sauce,
@@ -104,6 +112,7 @@ router.get("/recipedetail", (req, res) => {
   }
 });
 router.get("/recipedelete", (req, res) => {
+
   const recipeidx = req.query.idx;
   if (recipeidx) {
     Content.deleteOne({ idx: recipeidx }, function (err, data) {
@@ -290,20 +299,39 @@ router.get("/logincheck", function (req, res) {
   }
 });
 
-router.get('/test', function(req, res) {
-  const need = new Need({
-    class: '야채',
-  });
-  need.save((err) => {
-    if (err) console.log(err);
-    else {
-      res.json('good')
-    }
-  });
-});
+//board control
+router.post('/imageupload',upload.single('image'), function(req,res) {
+  const result = 'http://localhost:3001/image/' + (req.file.path.slice(23));
+  res.json(result)
+})
 
-router.post('/imageupload', function(req,res) {
-  console.log(req.file);
-  res.json('hey')
+router.get("/view", function (req, res) {
+  Content.updateOne({ idx : req.query.idx }, 
+    {$inc : {view:1}}, function(err, result) {
+      if(err) console.log(err);
+    })
+});
+router.get("/like", function(req,res) {
+  Content.updateOne({ idx : req.query.idx },
+    {$inc : {like:1}}, function(err,result) {
+      if(err) console.log(err);
+      else { res.json('성공')}
+    })
+})
+
+router.get("/hate", function(req,res) {
+  Content.updateOne({ idx : req.query.idx },
+    {$inc : {hate:1}}, function(err,result) {
+      if(err) console.log(err);
+      else { res.json('성공')}
+    })
+})
+
+
+router.get('/test', function(req,res) {
+  const a = '<p>ㄹㄹㄹ<img src=\"http://localhost:3001/image/1591459015102.jpg\" alt=\"alt text\"><img src=\"http://localhost:3001/image/1591459019655.jpg\" alt=\"alt text\"></p>\n';
+  const b = a.match(/[\"']?([^>\"']+)[\"']?[^>]*>/g);
+  const c = a.match(/http([^>\"']+)/g)
+  res.json(c);
 })
 module.exports = router;

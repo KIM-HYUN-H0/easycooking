@@ -13,9 +13,40 @@ class Detail extends Component {
       detail: null,
     };
     this.recipedelete = this.recipedelete.bind(this);
+    this.like = this.like.bind(this);
+    this.hate = this.hate.bind(this);
   }
   async componentDidMount() {
-    const result = await axios.get("http://localhost:3001/DBapi/recipedetail", {
+    console.log(document.location.href);
+    this.recipeview();
+    this.recipedetail();
+  }
+  async categorycheck() {
+    
+  }
+  async like() {
+    await axios.get('http://192.168.219.103:3001/DBapi/like', {
+      params : {
+        idx : this.props.match.params.recipeidx
+      }
+    }, {withCredentials : true})
+  }
+  async hate() {
+    await axios.get('http://192.168.219.103:3001/DBapi/hate', {
+      params : {
+        idx : this.props.match.params.recipeidx
+      }
+    }, {withCredentials : true})
+  }
+  async recipeview() {
+    await axios.get('http://192.168.219.103:3001/DBapi/view', {
+      params : {
+        idx : this.props.match.params.recipeidx
+      }
+    })
+  }
+  async recipedetail() {
+    const result = await axios.get("http://192.168.219.103:3001/DBapi/recipedetail", {
       params: {
         idx: this.props.match.params.recipeidx,
       },
@@ -23,13 +54,18 @@ class Detail extends Component {
     });
     if (this.state.detail === null && result) {
       const data = result.data.data[0];
+      let result2 = [];
       this.setState({
-        detail: (
-          <>
+        detail: await axios.get('http://192.168.219.103:3001/DBapi/categorycheck', {
+          params : { idx : data.category }
+        })
+        .then((data2) => {
+          result2.push(
+            <>
             <Detailrecipe>
               <thead>
               <tr>
-                  <th colSpan="7"><img src="http://placehold.it/400X200"></img></th>
+                  <th colSpan="7"><Thumbnail src={data.thumbnail}></Thumbnail></th>
                 </tr>
                 <tr>
                   <Title colSpan={7}>{data.title}</Title>
@@ -42,15 +78,15 @@ class Detail extends Component {
                   <Th>카테고리</Th>
                   <Th>글번호</Th>
                   <Th>조회수</Th>
-                  <Th>좋아요</Th>
-                  <Th>싫어요</Th>
+                  <Th><a href={document.location.href} onClick={this.like}>좋아요</a></Th>
+                  <Th><a href={document.location.href} onClick={this.hate}>싫어요</a></Th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <Td>{data.author}</Td>
                   <Td>{moment(data.board_date).format("YYYY-MM-DD hh:mm")}</Td>
-                  <Td>{data.category}</Td>
+                  <Td>{data2.data.data}</Td>
                   <Td>{data.idx}</Td>
                   <Td>{data.view}</Td>
                   <Td>{data.like}</Td>
@@ -78,17 +114,23 @@ class Detail extends Component {
                 </tr>
               </thead>
             </Detailrecipe>
+            <div class="viewer">
             <Content>
               <Viewer initialValue={data.content} />
             </Content>
+            </div>
           </>
-        ),
-      });
+          )
+        
+          return <>{result2}</>
+      })
+    })
     }
   }
+  
   //<div dangerouslySetInnerHTML={{__html: data.content }}></div>
   async recipedelete() {
-    const result = await axios.get("http://localhost:3001/DBapi/recipedelete", {
+    const result = await axios.get("http://192.168.219.103:3001/DBapi/recipedelete", {
       params: {
         idx: this.props.match.params.recipeidx,
       },
@@ -148,4 +190,6 @@ const Th = styled.th`
 const Title = styled.th`
   font-size: 30px;
 `;
+const Thumbnail = styled.img
+`height : 300px;`
 export default Detail;

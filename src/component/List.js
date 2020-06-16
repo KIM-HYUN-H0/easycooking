@@ -21,8 +21,9 @@ class List extends Component {
     return (
       <>
           <Category>
+          <Categorytitle>Category</Categorytitle>
             <Listul>
-              <Categorytitle>Category</Categorytitle>
+              
                 <Listli>
                   <CTtitle to="/board/0" style={{ textDecoration: 'none' }}>전체보기</CTtitle>
                 </Listli>
@@ -36,17 +37,23 @@ class List extends Component {
 }
 
 const Category = styled.span
-``;
+`
+display : block;
+`;
 const Listul = styled.ul
-`width:15%;
-display : inline-block;`;
+`
+display : inline-block;
+text-align:center;
+`;
 const Categorytitle = styled.span
-`text-align:center;
-color : #B8DEA8`
+`color : #B8DEA8;
+`
 const Listli = styled.li
-`list-style: none;
+`
+display : inline-block;
+list-style: none;
 font-size : 20px;
-margin-top:1rem;
+margin-left:1rem;
 `
 const CTtitle = styled(Link)
 `color : black;`

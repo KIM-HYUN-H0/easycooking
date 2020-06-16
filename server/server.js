@@ -16,7 +16,7 @@ app.use(cors({
 }));
 app.use(require('cookie-parser')());
 app.use(require('body-parser').urlencoded({ extended: true }));
-app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true, cookie : { maxAge : 1000 * 60 } }));
+app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true, cookie : { maxAge : 1000 * 60 * 30 } }));
 
 
 app.use(passport.initialize()); // passport 초기화
@@ -30,7 +30,6 @@ passport.deserializeUser(User.deserializeUser());
 app.use(express.static('server/resources'))                 //정적파일 저장
 app.use(express.json({ limit : "50mb" }));
 app.use(express.urlencoded({ limit:"50mb", extended: false }));
-
 //server End
 
 //module
@@ -40,6 +39,7 @@ const dbapi = require('./routes/route');
 
 // DB
 const db = mongoose.connection;
+mongoose.set('useFindAndModify', false);
 db.on('error', console.error);
 db.once('open', function(){ 
     console.log('connected mongodb server ! ');
