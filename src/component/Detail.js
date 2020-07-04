@@ -5,6 +5,21 @@ import "@toast-ui/editor/dist/toastui-editor.css";
 import { Viewer } from "@toast-ui/react-editor";
 import styled from "styled-components";
 import moment from "moment";
+import Button from "@material-ui/core/Button";
+import { withStyles } from "@material-ui/core/styles";
+import CardMedia from "@material-ui/core/CardMedia";
+import Box from "@material-ui/core/Box";
+import IconButton from "@material-ui/core/IconButton";
+import CardActions from "@material-ui/core/CardActions";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
+import ThumbDownIcon from "@material-ui/icons/ThumbDown";
+import CardHeader from "@material-ui/core/CardHeader";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import Typography from "@material-ui/core/Typography";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import clsx from "clsx";
 
 class Detail extends Component {
   constructor(props) {
@@ -17,124 +32,125 @@ class Detail extends Component {
     this.hate = this.hate.bind(this);
   }
   async componentDidMount() {
-    console.log(document.location.href);
     this.recipeview();
     this.recipedetail();
   }
-  async categorycheck() {
-    
-  }
   async like() {
-    await axios.get('http://192.168.219.103:3001/DBapi/like', {
-      params : {
-        idx : this.props.match.params.recipeidx
-      }
-    }, {withCredentials : true})
+    await axios.get(
+      "http://localhost:3001/board/like",
+      {
+        params: {
+          idx: this.props.match.params.recipeidx,
+        },
+      },
+      { withCredentials: true }
+    );
   }
   async hate() {
-    await axios.get('http://192.168.219.103:3001/DBapi/hate', {
-      params : {
-        idx : this.props.match.params.recipeidx
-      }
-    }, {withCredentials : true})
+    await axios.get(
+      "http://localhost:3001/board/hate",
+      {
+        params: {
+          idx: this.props.match.params.recipeidx,
+        },
+      },
+      { withCredentials: true }
+    );
   }
   async recipeview() {
-    await axios.get('http://192.168.219.103:3001/DBapi/view', {
-      params : {
-        idx : this.props.match.params.recipeidx
-      }
-    })
-  }
-  async recipedetail() {
-    const result = await axios.get("http://192.168.219.103:3001/DBapi/recipedetail", {
+    await axios.get("http://localhost:3001/board/view", {
       params: {
         idx: this.props.match.params.recipeidx,
       },
-      withCredentials: true,
     });
+  }
+  async recipedetail() {
+    const result = await axios.get(
+      "http://localhost:3001/board/recipedetail",
+      {
+        params: {
+          idx: this.props.match.params.recipeidx,
+        },
+        withCredentials: true,
+      }
+    );
     if (this.state.detail === null && result) {
       const data = result.data.data[0];
       let result2 = [];
       this.setState({
-        detail: await axios.get('http://192.168.219.103:3001/DBapi/categorycheck', {
-          params : { idx : data.category }
-        })
-        .then((data2) => {
-          result2.push(
-            <>
-            <Detailrecipe>
-              <thead>
-              <tr>
-                  <th colSpan="7"><Thumbnail src={data.thumbnail}></Thumbnail></th>
-                </tr>
-                <tr>
-                  <Title colSpan={7}>{data.title}</Title>
-                </tr>
-              </thead>
-              <thead>
-                <tr>
-                  <Th>작성자</Th>
-                  <Th>작성일</Th>
-                  <Th>카테고리</Th>
-                  <Th>글번호</Th>
-                  <Th>조회수</Th>
-                  <Th><a href={document.location.href} onClick={this.like}>좋아요</a></Th>
-                  <Th><a href={document.location.href} onClick={this.hate}>싫어요</a></Th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <Td>{data.author}</Td>
-                  <Td>{moment(data.board_date).format("YYYY-MM-DD hh:mm")}</Td>
-                  <Td>{data2.data.data}</Td>
-                  <Td>{data.idx}</Td>
-                  <Td>{data.view}</Td>
-                  <Td>{data.like}</Td>
-                  <Td>{data.hate}</Td>
-                </tr>
-              </tbody>
-              <thead>
-                <tr>
-                  <Th colSpan={7}>재료</Th>
-                </tr>
-              </thead>
-              <thead>
-                <tr>
-                  <Td colSpan={7}>{data.need.join(", ")}</Td>
-                </tr>
-              </thead>
-              <thead>
-                <tr>
-                  <Th colSpan={7}>양념</Th>
-                </tr>
-              </thead>
-              <thead>
-                <tr>
-                  <Td colSpan={7}>{data.sauce.join(", ")}</Td>
-                </tr>
-              </thead>
-            </Detailrecipe>
-            <div class="viewer">
-            <Content>
-              <Viewer initialValue={data.content} />
-            </Content>
-            </div>
-          </>
-          )
-        
-          return <>{result2}</>
-      })
-    })
+        detail: await axios
+          .get("http://localhost:3001/category/categorycheck", {
+            params: { idx: data.category },
+          })
+          .then((data2) => {
+            console.log(data.date);
+            result2.push(
+              <>
+                <Box className={this.props.classes.box} m={0}>
+                  <Card className={this.props.classes.root}>
+                    <CardHeader title={data.title} subheader={moment(data.board_date).format("YYYY-MM-DD hh:mm")} />
+                    <CardMedia
+                      className={this.props.classes.media}
+                      image={data.thumbnail}
+                      title={data.title}
+                      style={{ border: "1px solid gray" }}
+                    ></CardMedia>
+                    <CardContent>
+                      <Typography>{data.author} 요리사</Typography>
+                    </CardContent>
+                    <CardActions disableSpacing>
+                      <IconButton color="inherit" aria-label="view">
+                        <VisibilityIcon />
+                        <Typography>{data.view}</Typography>
+                      </IconButton>
+                      <IconButton
+                        component="a"
+                        href={document.location.href}
+                        onClick={data.like}
+                        color="secondary"
+                        aria-label="add to favorites"
+                      >
+                        <ThumbUpAltIcon />
+                        <Typography>{data.like}</Typography>
+                      </IconButton>
+                      <IconButton
+                        component="a"
+                        href={document.location.href}
+                        onClick={this.hate}
+                        color="primary"
+                        aria-label="share"
+                      >
+                        <ThumbDownIcon />
+                        <Typography>{data.hate}</Typography>
+                      </IconButton>
+                    </CardActions>
+                    <CardContent>
+                      <hr />
+                      <div id="viewer">
+                      <Viewer style={{border:'5px solid gray'}} initialValue={data.content} />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Box>
+              </>
+            );
+
+            return <>{result2}</>;
+          }),
+      });
     }
   }
-  
+
   //<div dangerouslySetInnerHTML={{__html: data.content }}></div>
   async recipedelete() {
-    const result = await axios.get("http://192.168.219.103:3001/DBapi/recipedelete", {
-      params: {
-        idx: this.props.match.params.recipeidx,
-      },
-    });
+    const result = await axios.get(
+      "http://localhost:3001/board/recipedelete",
+      {
+        params: {
+          idx: this.props.match.params.recipeidx,
+        },
+      }
+    );
     console.log(result);
     if (result) {
       console.log("삭제되었습니다.");
@@ -147,49 +163,43 @@ class Detail extends Component {
     return (
       <>
         <Main>
-          <Sub>
             <span>
-              <a href={"/modify/" + this.props.match.params.recipeidx}>수정</a>
+              <Button
+                component="a"
+                href={"/modify/" + this.props.match.params.recipeidx}
+              >
+                수정
+              </Button>
             </span>
             <span>
-              <a href="/" onClick={this.recipedelete}>
+              <Button component="a" href="/" onClick={this.recipedelete}>
                 삭제
-              </a>
+              </Button>
             </span>
             {this.state.detail}
-          </Sub>
         </Main>
       </>
     );
   }
 }
-const Content = styled.div`
-margin-top : 2em;
-background-color : white;
-border : 1px solid gray;
-`;
-const Sub = styled.div`
-    display : inline-block;
-  width : 70%;
-`;
+const styles = (theme) => ({
+  box: {
+    textAlign: 'center',
+  },
+  root: {
+    width: '100%',
+    display : 'inline-block',
+    maxWidth:'1000px',
+    minWidth:'350px'
+  },
+  media: {
+    height: 0,
+    paddingTop: "56.25%", // 16:9
+  },
+});
+
 const Main = styled.div`
   text-align: center;
 `;
-const Detailrecipe = styled.table`
-  width: 100%;
-  color : #549A39;
-  background-color : white;
-  border : 1px solid gray;
-`;
-const Td = styled.td`
 
-`;
-const Th = styled.th`
-    color : #B8DEA8;
-`;
-const Title = styled.th`
-  font-size: 30px;
-`;
-const Thumbnail = styled.img
-`height : 300px;`
-export default Detail;
+export default withStyles(styles)(Detail);

@@ -21,37 +21,9 @@ code {
   font-size:20px;
     
 }
-/*레이아웃 확인용 */
-#need_modify {
-  text-align:center;
+#viewer p{
+  font-size :1.5em;
 }
-#need_list {
-  text-align:center;
-}
-#center {
-  text-align:center;
-}
-#needcategory {
-  text-align:center;
-  display : block;
-}
-#needtitle {
-  list-style:none;
-  text-align:center;
-  
-}
-#needcheckbox {
-  margin-left:5em;
-  margin-top:1em;  
-}
-#categorySet {
-  display : block;
-  margin-top:1em;
-}
-
-.viewer img {
-  width:50%;
-}
-.viewer p{
-  font-size:20px;
+#viewer li{
+  font-size :1.5em;
 }

@@ -16,8 +16,11 @@ import Modifysauce from './component/Modifysauce'
 import Login from './component/User/Login'
 import Register from './component/User/Register'
 import Container from '@material-ui/core/Container';
-import CardRecipe from './component/CardRecipe';
 import Manage from './component/Manage';
+import Test from './component/Test';
+import Info from './component/User/Info';
+import Wait from './component/Wait';
+import MyRefri from './component/User/MyRefri';
 
 
 function App() {
@@ -27,7 +30,7 @@ function App() {
     <Header />
     
     <Content />
-    <Container>
+    <Container style={{marginBottom : '100px'}}>
                 <Route exact path="/board/:idx" component = {List} />
                 <Route exact path="/write" component = {Write} />
                 <Route exact path="/modify/:idx" component = {Modify} />
@@ -36,10 +39,13 @@ function App() {
                 <Route exact path="/modifyneed" component = {ModifyNeed} />
                 <Route exact path="/search" component = {Search} />
                 <Route exact path="/login" component = {Login} />
-                <Route exact path="/Register" component = {Register} />
+                <Route exact path="/register" component = {Register} />
                 <Route exact path="/modifysauce" component = {Modifysauce} />
-                <Route exact path="/test" component = {CardRecipe} />
+                <Route exact path="/test" component = {Test} />
                 <Route exact path="/manage" component = {Manage} />
+                <Route exact path="/myrefri" component = {MyRefri} />
+                <Route exact path="/info" component = {Info} />
+                <Route exact path="/wait" component = {Wait} />
                 </Container></Router>
             
     </>

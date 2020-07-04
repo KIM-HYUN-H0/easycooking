@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { observer, inject } from "mobx-react";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 import styled from "styled-components";
 import moment from "moment";
 import CardRecipe from './CardRecipe';
+import Button from "@material-ui/core/Button";
 
 @inject("category")
 @observer
@@ -13,8 +14,10 @@ class Recipe extends Component {
     super(props);
     this.state = {
       recipelist: null,
-      resultcheck: null
+      resultcheck: null,
+      redirect : false
     };
+    this.checkLogin = this.checkLogin.bind(this);
   }
   async componentDidUpdate() {
     this.CTload();
@@ -26,7 +29,7 @@ class Recipe extends Component {
   async CTload() {
     if (this.props.category !== this.state.resultcheck) {
       await axios
-        .get("http://192.168.219.103:3001/DBapi/recipelist", {
+        .get("http://localhost:3001/board/recipelist", {
           params: {
             idx: this.props.category
           }
@@ -51,11 +54,25 @@ class Recipe extends Component {
         });
     }
   }
+  async checkLogin() {
+    await axios.get('http://localhost:3001/users/logincheck', {
+      withCredentials : true
+    })
+    .then(async (data) => {
+      await this.setState({ redirect : true});
+    })
+    .catch((err) => {
+      alert('로그인 후 글쓰기가 가능합니다.')
+    })
+  }
   render() {
+    if(this.state.redirect) {
+      return <Redirect push to="/write" />;
+    }
     return (
       <>
       <Contentwrite>
-            <Link to="/write">글쓰기</Link>
+            <Button variant="outlined" onClick={this.checkLogin}>글쓰기</Button>
       </Contentwrite>
         <Mainlist>
           {this.state.recipelist}

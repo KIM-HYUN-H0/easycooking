@@ -22,7 +22,7 @@ class ModifyNeed extends Component {
     this.classChange = this.classChange.bind(this);
   }
   async componentDidMount() {
-    const result = await axios.get("http://192.168.219.103:3001/DBapi/needlist");
+    const result = await axios.get("http://localhost:3001/DBapi/needlist");
     console.log(result);
     if (this.state.needlist === null) {
       this.setState({
@@ -69,7 +69,7 @@ class ModifyNeed extends Component {
     } else if (this.state.needclass === null) {
       alert("재료의 종류를 선택해주세요.");
     } else {
-      await axios.post("http://192.168.219.103:3001/DBapi/needsave", {
+      await axios.post("http://localhost:3001/DBapi/needsave", {
         name: this.state.needtext,
         class: this.state.needclass,
       })
@@ -79,7 +79,7 @@ class ModifyNeed extends Component {
     }
   }
   async needDelete(event) {
-    await axios.post("http://192.168.219.103:3001/DBapi/needdelete", {
+    await axios.post("http://localhost:3001/DBapi/needdelete", {
       name: this.state.needtext,
       class: this.state.needclass,
     });
@@ -88,13 +88,13 @@ class ModifyNeed extends Component {
     if (this.state.classtext === null) {
       alert("재료명을 입력해주세요.");
     }  else {
-      await axios.post("http://192.168.219.103:3001/DBapi/classsave", {
+      await axios.post("http://localhost:3001/DBapi/classsave", {
         class: this.state.classtext,
       });
     }
   }
   async classDelete(event) {
-    await axios.post("http://192.168.219.103:3001/DBapi/classdelete", {
+    await axios.post("http://localhost:3001/DBapi/classdelete", {
       class: this.state.classtext,
     });
   }

@@ -18,7 +18,7 @@ class Write extends Component {
     this.modifycall();
   }
   async categorylist() {
-    const result = await axios.get("http://192.168.219.103:3001/DBapi/categorylist");
+    const result = await axios.get("http://localhost:3001/DBapi/categorylist");
     if (this.state.list === null) {
       this.setState({
         list: Object.values(result.data.data).map((data, i) => (
@@ -31,7 +31,7 @@ class Write extends Component {
   }
   async modifycall() {
     const temp = this.props.match.params.idx;
-    await axios.get("http://192.168.219.103:3001/DBapi/recipedetail", {
+    await axios.get("http://localhost:3001/DBapi/recipedetail", {
       params : {
           idx : temp
       }
@@ -46,7 +46,7 @@ class Write extends Component {
       })
     })
     /*
-    const result = await axios.get("http://192.168.219.103:3001/DBapi/recipedetail", {
+    const result = await axios.get("http://localhost:3001/DBapi/recipedetail", {
             params : {
                 idx : temp
             }
@@ -64,7 +64,7 @@ class Write extends Component {
   render() {
     return (
       <>
-        <form method="post" action="http://192.168.219.103:3001/DBapi/recipewrite">
+        <form method="post" action="http://localhost:3001/DBapi/recipewrite">
           <div>컨텐츠를 수정중입니다</div>
           <div>요리 이름</div>
           <div>

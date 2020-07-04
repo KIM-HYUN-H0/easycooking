@@ -30,7 +30,7 @@ const contentSchema = new Schema({
     need : { type : [String]},
     sauce : { type : [String]},
     content : { type : String, default : '<img src="http://placehold.it/320x100" />'},
-    source : { type : String },
+    source : { type : String, default : '창작'},
     author : { type : String },
     category : { type : String },
     board_date : { type : Date, default : Date.now()},

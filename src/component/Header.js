@@ -1,99 +1,140 @@
 import React, { Component } from "react";
-import axios from 'axios';
-import {  Link  } from 'react-router-dom';
+import axios from "axios";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Container } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
+import HomeIcon from "@material-ui/icons/Home";
+import Avatar from "@material-ui/core/Avatar";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 
 class Header extends Component {
   constructor() {
     super();
     this.state = {
-      Logincheck : 
-      <HeaderTop>
-      <Link to="/login" style={{ textDecoration: 'none' }}><Topbutton>로그인</Topbutton></Link>
-      <Link to="/register" style={{ textDecoration: 'none' }}><Topbutton>회원가입</Topbutton></Link>
-      </HeaderTop>
-      
-    }
+      Logincheck: <TopLink to="/login">LOGIN</TopLink>,
+      anchorEl: null,
+    };
+    this.handleclick = this.handleclick.bind(this);
+    this.handleclose = this.handleclose.bind(this);
+  }
+  handleclick(e) {
+    this.setState({
+      anchorEl: e.currentTarget,
+    });
+  }
+  handleclose() {
+    this.setState({
+      anchorEl : null,
+    })
   }
   async componentDidMount() {
-
-    await axios.get('http://192.168.219.103:3001/DBapi/logincheck',
-    {withCredentials : true})
-    .then((data) => {
-      if(data.data !== false) {
-      this.setState({
-        Logincheck : 
-        <HeaderTop>
-        <Text>안녕하세요. {data.data}님.</Text>
-        <Topa href="/" onClick={this.logout}>로그아웃</Topa>
-        <Link to="#headercenter" style={{ textDecoration: 'none' }}><Topbutton>내정보</Topbutton></Link>
-        </HeaderTop>
-      })}
-    })
+    await axios
+      .get("http://localhost:3001/users/logincheck", {
+        withCredentials: true,
+      })
+      .then((data) => {
+        if (data.data !== false) {
+          this.setState({
+            Logincheck: (
+              <>
+                <Avatar
+                  aria-controls="simple-menu"
+                  aria-haspopup="true"
+                  onClick={this.handleclick}
+                >
+                  H
+                </Avatar>
+              </>
+            ),
+          });
+        }
+      });
   }
 
   async logout() {
-    await axios.get('http://192.168.219.103:3001/DBapi/logout',
-    { withCredentials : true }
-    )
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-        
+    await axios
+      .get("http://localhost:3001/users/logout", {
+        withCredentials: true,
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
   render() {
     return (
       <>
-      <div>
-        {this.state.Logincheck}
-      </div>
-        <Container><Typography className={this.props.classes.main} variant="h4">내 냉장고를 부탁해</Typography></Container>
+        <div className={this.props.classes.flex}>
+          <AppBar position="static" className={this.props.classes.appbar}>
+            <Toolbar>
+              <IconButton
+                component="a"
+                href="/"
+                edge="start"
+                className={this.props.classes.homebutton}
+                color="inherit"
+                aria-label="menu"
+              >
+                <HomeIcon />
+              </IconButton>
+
+              <Typography variant="h6" className={this.props.classes.flex}>
+                내 냉장고를 부탁해
+              </Typography>
+              <Button color="inherit">{this.state.Logincheck}</Button>
+              <Menu
+                  id="simple-menu"
+                  anchorEl={this.state.anchorEl} 
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(this.state.anchorEl)}
+                  onClose={this.handleclose}
+                >
+                  <MenuItem component={Link} to="/myrefri" onClick={this.handleclose}>내 냉장고</MenuItem>
+                  <MenuItem component={Link} to="/info" onClick={this.handleclose}>내 정보</MenuItem>
+                  <MenuItem onClick={this.handleclose}>로그아웃</MenuItem>
+                </Menu>
+            </Toolbar>
+          </AppBar>
+        </div>
       </>
     );
   }
 }
-const styles = theme => ({
-  main: {
-    textAlign:'center',
-    textDecoration : 'none',
-    color : '#AFDB9F',
-    '&:hover' : {
-      color : '#F48060'
-    }
-  }
+const styles = (theme) => ({
+  homebutton: {
+    marginRight: theme.spacing(2),
+  },
+  flex: {
+    flexGrow: 1,
+  },
+  appbar: {
+    backgroundColor: "#AFDB9F",
+    color: "white",
+  },
 });
-const HeaderTop = styled.div`
-text-align:right;
-`;
-const Topbutton = styled.span`
-bg-color : blue;
-margin-right : 1em;
-color : black;
-text-decoration:none;
-&:hover {
-  color : red
-}
-`;
 const Topa = styled.a`
-color : gray;
-text-decoration : none;
-margin-right : 1em;
-&:hover {
-  color : red
-}
-
+  color: white;
+  text-decoration: none;
 `;
-const Text = styled.span`
-bg-color : blue;
-margin-right : 1em;
-color : black;
-text-decoration:none;
+const TopLink = styled(Link)`
+  color: white;
+  text-decoration: none;
 `;
-
 export default withStyles(styles)(Header);

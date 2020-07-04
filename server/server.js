@@ -1,10 +1,10 @@
 //Import Module
 const express = require('express');
 const app = express();
+const router = express.Router();
 const cors = require('cors');
 const port = process.env.PORT || 3001;
 const mongoose = require('mongoose');
-const router = express.Router();
 const passport = require("passport");
 const User = require("./models/user");
 const cookieParser = require('cookie-parser');
@@ -35,7 +35,12 @@ app.use(express.urlencoded({ limit:"50mb", extended: false }));
 //module
 
 //module End
-const dbapi = require('./routes/route');
+const Sauce = require('./routes/Sauce');
+const Users = require('./routes/Users');
+const Board = require('./routes/Board');
+const Category = require('./routes/Category');
+const Need = require('./routes/Need');
+const Search = require('./routes/Search');
 
 // DB
 const db = mongoose.connection;
@@ -48,7 +53,12 @@ mongoose.connect('mongodb://localhost/easycooking')
 
 
 
-app.use('/DBapi', dbapi);
+app.use('/sauce', Sauce);
+app.use('/users', Users);
+app.use('/board', Board);
+app.use('/need', Need);
+app.use('/category', Category);
+app.use('/search', Search);
 //DB End
 
 

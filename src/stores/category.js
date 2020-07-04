@@ -13,7 +13,7 @@ export default class category {
 
   @action async getCategoryList() {
     
-    const result = await axios.get("http://192.168.219.103:3001/DBapi/categorylist");
+    const result = await axios.get("http://localhost:3001/category/categorylist");
     if (this.categorylist === null) {
       this.categorylist = Object.values(result.data.data)
         .map((data, i) => (

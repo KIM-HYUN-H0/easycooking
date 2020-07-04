@@ -1,6 +1,13 @@
 import React, { Component } from "react";
 import axios from 'axios';
 import styled from 'styled-components';
+import TextField from "@material-ui/core/TextField";
+import Container from '@material-ui/core/Container';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 class Login extends Component {
   constructor() {
@@ -31,7 +38,7 @@ class Login extends Component {
     })
   };
   async Login() {
-    await axios.post('http://192.168.219.103:3001/DBapi/login', 
+    await axios.post('http://localhost:3001/users/login', 
     {
       username : this.state.id,
       password : this.state.pw,
@@ -43,7 +50,7 @@ class Login extends Component {
     })
     .catch(err => {
       this.setState({
-        result : <Text2>아이디나 비번이 맞지 않습니다.</Text2>
+        result : <Typography>아이디나 비번이 맞지 않습니다.</Typography>
       })
     })
       
@@ -51,72 +58,65 @@ class Login extends Component {
   render() {
     return (
       <>
-        <Main>
-          <Text>로그인</Text>
-            <Inputform
-              type="text"
-              name="id"
-              placeholder="ID"
-              onChange={this.IDChange}
-            />
-            <Inputform
-              type="password"
-              name="password"
-              placeholder="PASSWORD"
-              onChange={this.PWChange}
-              onKeyPress={this.handleKeyPress}
-            />
-            <Submitform type="submit" onClick={this.Login}>로그인</Submitform>
+        <Container maxWidth="xs">
+          <Typography component="h1" variant="h5">로그인하기</Typography>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="username"
+            label="ID"
+            name="username"
+            autoComplete="email"
+            autoFocus
+            onChange={(e) => this.IDChange(e)}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            onChange={(e) => this.PWChange(e)}
+            onKeyPress={(e) => this.handleKeyPress(e)}
+          />
+            <Button
+            className={this.props.classes.button}
+            type="submit"
+            fullWidth
+            variant="contained"
+            onClick={() => this.Login()}
+          >
+            로그인
+          </Button>
             {this.state.result}
-        </Main>
+            <Grid container>
+            <Grid item xs>
+              <Link to="/wait" variant="body2" style={{color : 'black', textDecoration:'none'}}>
+                비밀번호 찾기
+              </Link>
+            </Grid>
+            <Grid item>
+              <Link to="/register" variant="body2"style={{color : 'black', textDecoration:'none'}}>
+                회원가입
+              </Link>
+            </Grid>
+          </Grid>
+        </Container>
       </>
     );
   }
 }
-const Main = styled.div
-`text-align:center;`
-const Text = styled.div
-`
-font-size : 30px;
-color : #549A39;
-`
-const Text2 = styled.div
-`
-font-size : 20px;
-color : red;
-`
-const Inputform = styled.input
-`
-display : block;
-padding-left : 1em;
-margin:auto;
-width : 500px;
-height : 60px;
-margin-top: 1em;
-color : #F48060;
-border : 1px solid #CFCFCF;
-&:focus {
-  outline : 2px solid #AFDB9F;
-}
-`
-const Submitform = styled.button
-`
-display : block;
-margin:auto;
-width:400px;
-height : 60px;
-border:1px solid gray;
-border-radius : 10px;
-background-color : #AFDB9F;
-color : white;
-font-size : 25px;
-font-family : 'KyoboHand';
-text-decoration : none;
-margin-top : 1em;
-text-align:center;
+const styles = theme => ({
 
-&:hover {
-  background-color : #549A39;
-}
-`;
-export default Login;
+  button : {
+    backgroundColor : '#AFDB9F',
+    color : 'white'
+  }
+});
+export default withStyles(styles)(Login);

@@ -33,7 +33,7 @@ class ModifyCT extends Component {
   }
   async categorySubmit(event) {
     await axios.post(
-      "http://192.168.219.103:3001/DBapi/categorysave",
+      "http://localhost:3001/category/categorysave",
       {
         name: this.state.categorytext,
       }
@@ -44,7 +44,7 @@ class ModifyCT extends Component {
   }
   async categorydelete(event) {
     await axios.post(
-      "http://192.168.219.103:3001/DBapi/categorydelete",
+      "http://localhost:3001/category/categorydelete",
       {
         name: this.state.categorytext,
       }
@@ -66,7 +66,7 @@ class ModifyCT extends Component {
     }
   };
   async categorylist() {
-    const result = await axios.get("http://192.168.219.103:3001/DBapi/categorylist");
+    const result = await axios.get("http://localhost:3001/category/categorylist");
     if (this.state.categorylist === null) {
       this.setState({ 
         categorylist : Object.values(result.data.data)

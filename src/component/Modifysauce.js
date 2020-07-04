@@ -14,7 +14,7 @@ class Modifysauce extends Component {
     this.needDelete = this.needDelete.bind(this);
   }
   async componentDidMount() {
-    const result = await axios.get("http://192.168.219.103:3001/DBapi/saucelist");
+    const result = await axios.get("http://localhost:3001/DBapi/saucelist");
     if (this.state.needlist === null) {
       this.setState({
         needlist: Object.values(result.data.data).map((data, i) => {
@@ -38,7 +38,7 @@ class Modifysauce extends Component {
     if (this.state.needtext === null) {
       alert("소스 이름을 입력해주세요.");
      } else {
-      await axios.post("http://192.168.219.103:3001/DBapi/saucesave", {
+      await axios.post("http://localhost:3001/DBapi/saucesave", {
         sauce: this.state.needtext,
       })
       .then((data) => {
@@ -47,7 +47,7 @@ class Modifysauce extends Component {
     }
   }
   async needDelete(event) {
-    await axios.post("http://192.168.219.103:3001/DBapi/saucedelete", {
+    await axios.post("http://localhost:3001/DBapi/saucedelete", {
       sauce: this.state.needtext,
     });
   }

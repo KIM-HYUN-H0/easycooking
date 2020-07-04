@@ -24,7 +24,7 @@ class Searchtitle extends Component {
       alert("검색어를 입력해주세요");
     } else {
       await axios
-        .get("http://192.168.219.103:3001/DBapi/titlesearch", {
+        .get("http://localhost:3001/search/titlesearch", {
           params: {
             name: count,
           },
@@ -55,7 +55,9 @@ class Searchtitle extends Component {
       <>
         <Grid className={classes.grid}>
           <TextField id="standard-basic" label="요리명" name="search" />
-          <Button variant="contained" onClick={this.searchSubmit}>
+          <Button 
+          style={{marginTop : '20px' , marginBottom : '20px'}}
+          variant="contained" onClick={this.searchSubmit}>
             검색
           </Button>
         </Grid>
@@ -66,8 +68,9 @@ class Searchtitle extends Component {
 }
 const styles = (theme) => ({
   grid: {
-    textAlign: "center",
-    marginLeft: theme.spacing(5),
+    display : 'flex',
+    flexDirection : 'column',
+    alignItems : 'center',
   },
 });
 

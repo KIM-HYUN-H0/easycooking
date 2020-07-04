@@ -22,14 +22,14 @@ class CardRecipe extends Component {
     this.hate = this.hate.bind(this);
   }
   async like() {
-    await axios.get('http://192.168.219.103:3001/DBapi/like', {
+    await axios.get('http://localhost:3001/DBapi/like', {
       params : {
         idx : this.props.idx
       }
     }, {withCredentials : true})
   }
   async hate() {
-    await axios.get('http://192.168.219.103:3001/DBapi/hate', {
+    await axios.get('http://localhost:3001/DBapi/hate', {
       params : {
         idx : this.props.idx
       }
@@ -48,6 +48,7 @@ class CardRecipe extends Component {
             className={classes.media}
             image={this.props.thumbnail}
             title={this.props.title}
+            style={{border:'1px solid gray'}}
           ></CardMedia>
           <CardContent>
             <Typography>{this.props.author} 요리사</Typography>
@@ -58,11 +59,11 @@ class CardRecipe extends Component {
               <VisibilityIcon />
               <Typography>{this.props.view}</Typography>
             </IconButton>
-            <IconButton onClick={this.like} color="secondary" aria-label="add to favorites">
+            <IconButton component="a" href={document.location.href} onClick={this.like} color="secondary" aria-label="add to favorites">
               <ThumbUpAltIcon />
               <Typography>{this.props.like}</Typography>
             </IconButton>
-            <IconButton onClick={this.hate} color="primary" aria-label="share">
+            <IconButton component="a" href={document.location.href} onClick={this.hate} color="primary" aria-label="share">
               <ThumbDownIcon />
               <Typography>{this.props.hate}</Typography>
             </IconButton>
@@ -78,7 +79,7 @@ const styles = (theme) => ({
     display : 'inline-block',
   },
   root: {
-    width: 345,
+    width: 300,
   },
   media: {
     height: 0,

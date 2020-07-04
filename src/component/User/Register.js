@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import axios from "axios";
 import styled from 'styled-components';
+import TextField from "@material-ui/core/TextField";
+import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
 
 class Register extends Component {
   constructor() {
@@ -47,7 +50,7 @@ class Register extends Component {
 
   async Register() {
     await axios
-      .post("http://192.168.219.103:3001/DBapi/signup", {
+      .post("http://localhost:3001/users/signup", {
         username: this.state.id,
         password: this.state.pw,
         password2 : this.state.pw2,
@@ -72,38 +75,72 @@ class Register extends Component {
       <>
         <Main>
           <Text>회원가입</Text>
-            <Inputform
-              type="text"
-              name="id"
-              placeholder="ID"
-              onChange={this.IDChange}
-            />
-            <Inputform
-              type="password"
-              name="password"
-              placeholder="Password"
-              onChange={this.PWChange}
-            />
-            <Inputform
-              type="password"
-              name="password2"
-              placeholder="Password Confirm"
-              onChange={this.PW2Change}
-            />
-            <Inputform
-              type="text"
-              name="nickname"
-              placeholder="Nickname"
-              onChange={this.NICKChange}
-              onKeyPress={this.handleKeyPress}
-            />
-            <Submitform value="Signup" onClick={this.Register}>Signup</Submitform>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="username"
+            label="ID"
+            name="username"
+            autoComplete="id"
+            autoFocus
+            onChange={(e) => this.IDChange(e)}
+          />
+            <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="password"
+            label="password"
+            name="password"
+            type="password"
+            onChange={(e) => this.PWChange(e)}
+          />
+            <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="password"
+            label="password"
+            name="password"
+            type="password"
+            onChange={(e) => this.PW2Change(e)}
+          />
+            <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="nickname"
+            label="Nickname"
+            onChange={(e) => this.NICKChange(e)}
+            onKeyPress={(e) => this.handleKeyPress(e)}
+          />
+            <Button
+            className={this.props.classes.button}
+            type="submit"
+            fullWidth
+            variant="contained"
+            onClick={() => this.Register()}
+          >
+            로그인
+          </Button>
           {this.state.result}
         </Main>
       </>
     );
   }
 }
+const styles = theme => ({
+
+  button : {
+    backgroundColor : '#AFDB9F',
+    color : 'white'
+  }
+});
 const Main = styled.div
 `text-align:center;`
 const Text = styled.div
@@ -146,4 +183,4 @@ text-align:center;
 }
 `;
 
-export default Register;
+export default withStyles(styles)(Register);

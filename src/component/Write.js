@@ -18,6 +18,10 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import Paper from "@material-ui/core/Paper";
+import Button from '@material-ui/core/Button';
+import Need from './Repeat/Need'
+import Sauce from './Repeat/Sauce'
 
 @inject("category")
 @observer
@@ -38,23 +42,22 @@ class Write extends Component {
       content: null,
       thumbnailcheck: 0,
       thumbnail: null,
+      need1: null,
     };
-    this.needchange = this.needchange.bind(this);
-    this.saucechange = this.saucechange.bind(this);
     this.sourceChange = this.sourceChange.bind(this);
     this.categoryChange = this.categoryChange.bind(this);
     this.titleChange = this.titleChange.bind(this);
     this.handlesubmit = this.handlesubmit.bind(this);
+    this.LoadNeedState = this.LoadNeedState.bind(this);
+    this.LoadSauceState = this.LoadSauceState.bind(this);
   }
 
   async componentDidMount() {
-    this.needlist();
     this.categorylist();
-    this.saucelist();
   }
   async categorylist() {
     const result = await axios.get(
-      "http://192.168.219.103:3001/DBapi/categorylist"
+      "http://localhost:3001/category/categorylist"
     );
     if (this.state.list === null) {
       this.setState({
@@ -66,108 +69,7 @@ class Write extends Component {
       });
     }
   }
-  async saucelist() {
-    await axios
-      .get("http://192.168.219.103:3001/DBapi/saucelist")
-      .then((data) => {
-        this.setState({
-          saucelist: Object.values(data.data.data).map((data2, i) => (
-            <>
-              <label key={i}>
-                <input
-                  id="saucecheckbox"
-                  type="checkbox"
-                  value={data2.name}
-                  onChange={this.saucechange}
-                ></input>
-                {data2.name}
-              </label>
-            </>
-          )),
-        });
-      });
-  }
-  async needchange(event) {
-    if (event.target.checked) {
-      this.setState({
-        need: this.state.need.concat(event.target.value),
-      });
-    } else {
-      const a = this.state.need;
-      const b = event.target.value;
-      a.splice(a.indexOf(b), 1);
-      this.setState({
-        need: a,
-      });
-    }
-  }
-  async saucechange(event) {
-    if (event.target.checked) {
-      this.setState({
-        sauce: this.state.sauce.concat(event.target.value),
-      });
-    } else {
-      const a = this.state.sauce;
-      const b = event.target.value;
-      a.splice(a.indexOf(b), 1);
-      this.setState({
-        sauce: a,
-      });
-    }
-  }
-  async needlist() {
-    const result = await axios.get(
-      "http://192.168.219.103:3001/DBapi/needlist"
-    );
-    console.log(result);
-    if (this.state.needlist === null) {
-      this.setState({
-        classlist: Object.values(result.data.data).map((data, i) => (
-          <label key={i}>
-            <input type="radio" name="class" value={data.class}></input>
-            {data.class}
-          </label>
-        )),
-        needlist: Object.values(result.data.data).map((data, i) => {
-          let sort = [];
-          sort.push(
-            <ExpansionPanelSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-              key={i}
-            >
-              <Typography>{data.class}</Typography>
-            </ExpansionPanelSummary>
-          );
-          Object.values(data.need).map((data2, i) => {
-            sort.push(
-              <>
-                <ExpansionPanelDetails
-                  className={this.props.classes.theme}
-                  key={i}
-                >
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        onChange={(e) => this.needchange(e)}
-                        name={data.class}
-                        color="primary"
-                        value={data2.name}
-                      />
-                    }
-                    label={data2.name}
-                  />
-                </ExpansionPanelDetails>
-              </>
-            );
-          });
 
-          return <ExpansionPanel>{sort}</ExpansionPanel>;
-        }),
-      });
-    }
-  }
   titleChange(event) {
     this.setState({
       title: event.target.value,
@@ -184,9 +86,8 @@ class Write extends Component {
     });
   }
   async handlesubmit() {
-    console.log(this.state.thumbnail);
     axios.post(
-      "http://192.168.219.103:3001/DBapi/recipewrite",
+      "http://localhost:3001/board/recipewrite",
       {
         thumbnail: this.state.thumbnail,
         title: this.state.title,
@@ -202,7 +103,7 @@ class Write extends Component {
   uploadImage(blob) {
     let formData = new FormData();
     formData.append("image", blob);
-    return axios("http://192.168.219.103:3001/DBapi/imageupload", {
+    return axios("http://localhost:3001/board/imageupload", {
       method: "POST",
       data: formData,
       headers: { "Content-type": "multipart/form-data" },
@@ -231,131 +132,86 @@ class Write extends Component {
         console.log(error);
       });
   }
+  
+  LoadNeedState(text) {
+    if(this.state.need.length !== text.length) {
+      this.setState({ 
+        need : text.map(data => data = data.title)
+      })
+    }
+  }
+  LoadSauceState(text) {
+    if(this.state.sauce.length !== text.length) {
+      this.setState({ 
+        sauce : text.map(data => data = data.title)
+      })
+    }
+  }
+
   render() {
-    console.log(this.state);
     return (
       <>
-        <Main>
-          <Sub>
-            <Detailrecipe>
-              <thead>
-                <tr>
-                  <Title colSpan={7}>
-                    <TextField
-                      id="outlined-basic"
-                      label="요리 이름"
-                      variant="outlined"
-                      onChange={this.titleChange}
-                    />
-                  </Title>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <Td>
-                    <FormControl className={this.props.classes.formControl}>
-                      <InputLabel>요리 종류</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        onChange={this.categoryChange}
-                      >
-                        {this.state.list}
-                      </Select>
-                    </FormControl>
-                  </Td>
-                </tr>
-              </tbody>
-              <thead>
-                <tr>
-                  <Th>재료 선택</Th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <Td>{this.state.needlist}</Td>
-                </tr>
-              </tbody>
+        
+          <TextField 
+          fullWidth 
+          style={{margin : 'auto' }}
+          label="요리 이름" onChange={this.titleChange} />
 
-              <thead>
-                <tr>
-                  <Th>양념 선택</Th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <Td>{this.state.saucelist}</Td>
-                </tr>
-              </tbody>
-              <thead>
-                <tr>
-                  <Th>출처</Th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <Td>
-                    <input type="text" onChange={this.sourceChange} />
-                  </Td>
-                </tr>
-              </tbody>
-            </Detailrecipe>
+          <FormControl 
+          fullWidth 
+          style={{margin : 'auto' }}
+          >
+            <InputLabel>요리 종류</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              onChange={this.categoryChange}
+            >
+              {this.state.list}
+            </Select>
+          </FormControl>
 
-            <Editor
-              previewStyle="vertical"
-              height="300px"
-              initialEditType="wysiwyg"
-              placeholder="가장 마지막 사진이 썸네일로 자동저장됩니다."
-              ref={this.editorRef}
-              hooks={{
-                addImageBlobHook: async (blob, callback) => {
-                  const upload = await this.uploadImage(blob);
-                  callback(upload, "alt text");
-                  return false;
-                },
-              }}
-            />
-            <div>
-              <a href="/" onClick={this.handlesubmit}>
-                작성
-              </a>
-            </div>
-          </Sub>
-        </Main>
+        <Need func={this.LoadNeedState}/>
+        <Sauce func = {this.LoadSauceState}/>
+
+        <TextField 
+        fullWidth
+        label="출처도 적어주세요 !" onChange={this.sourceChange} />
+        <Editor
+          previewStyle="vertical"
+          height="300px"
+          initialEditType="wysiwyg"
+          placeholder="가장 마지막 사진이 썸네일로 자동저장됩니다."
+          ref={this.editorRef}
+          toolbarItems={["image"]}
+          hooks={{
+            addImageBlobHook: async (blob, callback) => {
+              const upload = await this.uploadImage(blob);
+              callback(upload, "alt text");
+              return false;
+            },
+          }}
+        />
+        <div>
+          <Button variant="outlined"
+          href="/" onClick={this.handlesubmit}>작성</Button>
+        </div>
       </>
     );
   }
 }
 const styles = (theme) => ({
+  paper: {
+
+
+  },
   details: {
-    display: "flex",
-    flexDirection: "row",
+    flexDirection: "column",
   },
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120,
   },
 });
-
-const Sub = styled.div`
-  display: inline-block;
-  width: 70%;
-`;
-const Main = styled.div`
-  text-align: center;
-`;
-const Detailrecipe = styled.table`
-  width: 100%;
-  color: #549a39;
-  background-color: white;
-  border: 1px solid gray;
-`;
-const Td = styled.td``;
-const Th = styled.th`
-  color: #b8dea8;
-`;
-const Title = styled.th`
-  font-size: 30px;
-`;
 
 export default withStyles(styles)(Write);
